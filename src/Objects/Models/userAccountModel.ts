@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
-
+import { PrimaryGeneratedColumn, Column } from "typeorm"
 
 export class UserAccountModel {
     @PrimaryGeneratedColumn()
