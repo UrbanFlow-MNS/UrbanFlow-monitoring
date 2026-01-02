@@ -1,19 +1,17 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 
 @Entity()
-export class ServerDatastampModel {
+export class DataLogsEntity {
     @PrimaryGeneratedColumn()
     id: number;
     @Column()
-    serverName: string;
+    isApi: boolean;
     @Column()
-    timestamp: Date;
+    targetId: number;
     @Column()
-    cpuPercent: number;
+    dateOfData: Date;
     @Column()
-    gpuPercent: number;
+    numberOfConnection: number;
     @Column()
-    ramUsage: number;
-    @Column()
-    internalTemp: number;
+    event: string;
 }

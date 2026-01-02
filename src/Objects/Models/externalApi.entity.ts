@@ -1,17 +1,15 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 
 @Entity()
-export class DataLogsModels {
+export class ExternalApiEntity {
     @PrimaryGeneratedColumn()
     id: number;
     @Column()
-    isApi: boolean;
+    name: string;
     @Column()
-    targetId: number;
+    url: string;
     @Column()
-    dateOfData: Date;
+    isActive: boolean;
     @Column()
-    numberOfConnection: number;
-    @Column()
-    event: string;
+    version: string;
 }
