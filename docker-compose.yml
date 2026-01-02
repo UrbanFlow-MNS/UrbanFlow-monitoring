@@ -1,0 +1,53 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: RABBIT_MQ
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file:
+      - .env.docker.rabbitmq
+    networks:
+      - urban-flow-network
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  monitoring-db:
+    image: postgres:15
+    env_file:
+      - .env.docker
+    ports:
+      - "5432:5432"
+    volumes:
+      - monitoring-db:/var/lib/postgresql/data
+    networks:
+      - urban-flow-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres_monitoring" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  monitoring-service:
+    build: .
+    env_file:
+      - .env.docker
+    ports:
+      - "4002:4002"
+    depends_on:
+      monitoring-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - urban-flow-network
+
+volumes:
+  monitoring-db:
+
+networks:
+  urban-flow-network:
+    driver: bridge
