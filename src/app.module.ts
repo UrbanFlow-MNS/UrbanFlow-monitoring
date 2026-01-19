@@ -3,11 +3,11 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { DataLogsEntity } from './Objects/Models/dataLogs.entity';
-import { ExternalApiEntity } from './Objects/Models/externalApi.entity';
-import { MicroserviceEntity } from './Objects/Models/microservice.entity';
-import { ServerDatastampEntity } from './Objects/Models/serverDatastamp.entity';
-import { UserAccountEntity } from './Objects/Models/userAccount.entity';
+import { DataLogsEntity } from './Objects/Entities/dataLogs.entity';
+import { ExternalApiEntity } from './Objects/Entities/externalApi.entity';
+import { MicroserviceEntity } from './Objects/Entities/microservice.entity';
+import { ServerDatastampEntity } from './Objects/Entities/serverDatastamp.entity';
+import { UserAccountEntity } from './Objects/Entities/userAccount.entity';
 
 @Module({
   imports: [
