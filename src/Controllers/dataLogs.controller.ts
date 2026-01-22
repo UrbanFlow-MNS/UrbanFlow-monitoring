@@ -1,5 +1,5 @@
-import { DataLogsDto } from "src/Objects/DTOs/dataLogs.dto";
-import { Controller, Get, Query } from '@nestjs/common';
+import { DataLogsBody } from '@bato-urbanflow/urbanflow-models';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { DataLogsService } from '../Services/dataLogs.service';
 
 @Controller('dataLogs')
@@ -15,9 +15,14 @@ export class DataLogsController {
     @Query('isApi') isApi?: boolean,
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
-  ) : Promise<DataLogsDto[]>
+  ) : Promise<DataLogsBody[]>
   {
     return await this.dataLogsService.findWithFilters(numberOfElement, startingElement, isApi , startDate, endDate);
+  }
+
+  @Post()
+  async addLog(@Body() data: DataLogsBody): Promise<DataLogsBody> {
+    return await this.dataLogsService.addLog(data)
   }
 
 }

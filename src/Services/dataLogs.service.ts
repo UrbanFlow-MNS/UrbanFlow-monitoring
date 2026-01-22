@@ -1,9 +1,10 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataLogsDto } from '../Objects/DTOs/dataLogs.dto';
 import { Injectable } from '@nestjs/common';
+import { DataLogsBody } from '@bato-urbanflow/urbanflow-models';
 import { DataLogsEntity } from 'src/Objects/Entities/dataLogs.entity';
 import { IDataLogsService } from '../Objects/Interfaces/IDataLogsService';
-import { dateUtils } from '@bato-urbanflow/urbanflow-models'import { Repository } from 'typeorm';
+import { dateUtils } from '@bato-urbanflow/urbanflow-models';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class DataLogsService implements IDataLogsService {
@@ -24,7 +25,7 @@ export class DataLogsService implements IDataLogsService {
     isApi?: boolean,
     startDate?: string,
     endDate?: string,
-  ): Promise<DataLogsDto[]>
+  ): Promise<DataLogsBody[]>
   {
     let parsedStartDate : Date | undefined
     let parsedEndDate : Date | undefined
@@ -35,7 +36,7 @@ export class DataLogsService implements IDataLogsService {
       parsedEndDate = new Date(Date.parse(endDate))
     }
 
-    const fetchedLogs : DataLogsDto[] = await this.dataLogsRepository.find({
+    const fetchedLogs : DataLogsBody[] = await this.dataLogsRepository.find({
       where : {
         isApi: isApi,
         dateOfData: dateUtils.getDateFindOperator(parsedStartDate,parsedEndDate)
@@ -55,5 +56,8 @@ export class DataLogsService implements IDataLogsService {
     return fetchedLogs.slice(startingElement, numberOfElement)
   }
 
+  async addLog(data: DataLogsBody): Promise<DataLogsBody> {
+    return await this.dataLogsRepository.save(data);
+  }
 
 }

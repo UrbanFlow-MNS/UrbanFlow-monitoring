@@ -1,4 +1,4 @@
-import { DataLogsDto } from '../DTOs/dataLogs.dto';
+import { DataLogsBody } from '@bato-urbanflow/urbanflow-models';
 
 export interface IDataLogsService {
 
@@ -8,5 +8,7 @@ export interface IDataLogsService {
     isApi?: boolean,
     startDate?: string,
     endDate?: string,
-  ): Promise<DataLogsDto[]>;
+  ): Promise<DataLogsBody[]>;
+
+  addLog(data: DataLogsBody): Promise<DataLogsBody>;
 }
