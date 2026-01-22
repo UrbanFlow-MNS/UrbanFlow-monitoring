@@ -2,8 +2,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataLogsDto } from '../Objects/DTOs/dataLogs.dto';
 import { Injectable } from '@nestjs/common';
 import { DataLogsEntity } from 'src/Objects/Entities/dataLogs.entity';
-import { Between, FindOperator, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { IDataLogsService } from '../Objects/Interfaces/IDataLogsService';
+import { dateUtils } from '@bato-urbanflow/urbanflow-models'import { Repository } from 'typeorm';
 
 @Injectable()
 export class DataLogsService implements IDataLogsService {
@@ -38,7 +38,7 @@ export class DataLogsService implements IDataLogsService {
     const fetchedLogs : DataLogsDto[] = await this.dataLogsRepository.find({
       where : {
         isApi: isApi,
-        dateOfData: this.getDateFindOperator(parsedStartDate,parsedEndDate)
+        dateOfData: dateUtils.getDateFindOperator(parsedStartDate,parsedEndDate)
       }
     })
 
@@ -55,19 +55,5 @@ export class DataLogsService implements IDataLogsService {
     return fetchedLogs.slice(startingElement, numberOfElement)
   }
 
-  // Utils
-  getDateFindOperator(startDate?: Date, endDate?: Date): FindOperator<Date> | undefined {
-    if(startDate == undefined && endDate == undefined)
-      return undefined
-
-    if (startDate != undefined && endDate != undefined)
-      return Between(startDate, endDate)
-
-    if(endDate != undefined)
-      return LessThanOrEqual(endDate)
-
-    if(startDate != undefined)
-      return MoreThanOrEqual(startDate)
-  }
 
 }
