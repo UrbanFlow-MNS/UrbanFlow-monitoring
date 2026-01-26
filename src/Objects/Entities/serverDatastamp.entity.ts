@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, Timestamp } from 'typeorm';
 
 @Entity()
 export class ServerDatastampEntity {
@@ -7,7 +7,7 @@ export class ServerDatastampEntity {
     @Column()
     serverName: string;
     @Column()
-    timestamp: Date;
+    timestamp: Timestamp;
     @Column()
     cpuPercent: number;
     @Column()
