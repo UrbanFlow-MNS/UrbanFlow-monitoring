@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import {
-  DataLogsBody,
-  dateUtils,
   ExternalApiBody,
 } from '@bato-urbanflow/urbanflow-models';
 import { IExternalApiService } from '../Objects/Interfaces/IExternalApiService';
@@ -27,7 +25,7 @@ export class ExternalApiService implements IExternalApiService {
     name?: string,
     isActive?: boolean,
   ): Promise<ExternalApiBody[]> {
-    const fetchedLogs: ExternalApiBody[] =
+    const fetchedApi: ExternalApiBody[] =
       await this.externalApiRepository.find({
         where: {
           name: Like(`%${name}%`),
@@ -37,7 +35,7 @@ export class ExternalApiService implements IExternalApiService {
 
     if (startingElement === undefined) {
       startingElement = 0;
-    } else if (startingElement >= fetchedLogs.length) {
+    } else if (startingElement >= fetchedApi.length) {
       throw new Error(
         'The starting element is greater than the number of element',
       );
@@ -47,7 +45,7 @@ export class ExternalApiService implements IExternalApiService {
       numberOfElement = 50;
     }
 
-    return fetchedLogs.slice(startingElement, numberOfElement);
+    return fetchedApi.slice(startingElement, numberOfElement);
   }
 
   addApi(data: ExternalApiBody): Promise<ExternalApiBody> {
