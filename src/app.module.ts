@@ -8,6 +8,8 @@ import { ExternalApiEntity } from './Objects/Entities/externalApi.entity';
 import { MicroserviceEntity } from './Objects/Entities/microservice.entity';
 import { ServerDatastampEntity } from './Objects/Entities/serverDatastamp.entity';
 import { UserAccountEntity } from './Objects/Entities/userAccount.entity';
+import { DataLogsController } from './Controllers/dataLogs.controller';
+import { ExternalApiController } from './Controllers/externalApi.controller';
 
 @Module({
   imports: [
@@ -27,7 +29,7 @@ import { UserAccountEntity } from './Objects/Entities/userAccount.entity';
       synchronize: Boolean(process.env.POSTGRES_SYNCHRONISE)
     }),
     TypeOrmModule.forFeature([DataLogsEntity, ExternalApiEntity, MicroserviceEntity, ServerDatastampEntity, UserAccountEntity])
-  ],  controllers: [AppController],
+  ],  controllers: [AppController, DataLogsController, ExternalApiController],
   providers: [AppService],
 })
 export class AppModule {}
