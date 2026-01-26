@@ -7,9 +7,10 @@ import { DataLogsEntity } from './Objects/Entities/dataLogs.entity';
 import { ExternalApiEntity } from './Objects/Entities/externalApi.entity';
 import { MicroserviceEntity } from './Objects/Entities/microservice.entity';
 import { ServerDatastampEntity } from './Objects/Entities/serverDatastamp.entity';
-import { UserAccountEntity } from './Objects/Entities/userAccount.entity';
 import { DataLogsController } from './Controllers/dataLogs.controller';
 import { ExternalApiController } from './Controllers/externalApi.controller';
+import { MicroserviceController } from './Controllers/microservice.controller';
+import { ServerDatastampController } from './Controllers/serverDatastamp.controller';
 
 @Module({
   imports: [
@@ -25,11 +26,11 @@ import { ExternalApiController } from './Controllers/externalApi.controller';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [DataLogsEntity, ExternalApiEntity, MicroserviceEntity, ServerDatastampEntity, UserAccountEntity],
+      entities: [DataLogsEntity, ExternalApiEntity, MicroserviceEntity, ServerDatastampEntity],
       synchronize: Boolean(process.env.POSTGRES_SYNCHRONISE)
     }),
-    TypeOrmModule.forFeature([DataLogsEntity, ExternalApiEntity, MicroserviceEntity, ServerDatastampEntity, UserAccountEntity])
-  ],  controllers: [AppController, DataLogsController, ExternalApiController],
+    TypeOrmModule.forFeature([DataLogsEntity, ExternalApiEntity, MicroserviceEntity, ServerDatastampEntity])
+  ],  controllers: [AppController, DataLogsController, ExternalApiController, ServerDatastampController, MicroserviceController],
   providers: [AppService],
 })
 export class AppModule {}
