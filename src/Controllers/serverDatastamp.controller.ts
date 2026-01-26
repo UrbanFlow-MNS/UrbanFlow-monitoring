@@ -5,7 +5,7 @@ import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ServerDatastampService } from '../Services/serverDatastamp.service';
 
 @Controller('dataLogs')
-export class DataLogsController {
+export class ServerDatastampController {
   constructor(private readonly serverDatastampService: ServerDatastampService) {
     this.serverDatastampService = serverDatastampService;
   }
