@@ -1,7 +1,7 @@
 import { Controller, Get, Inject } from '@nestjs/common';
 import * as IPrometheusService from '../Objects/Interfaces/IPrometheusService';
 
-@Controller('prometheus')
+@Controller('metrics')
 export class PrometheusController {
   constructor(
     @Inject('IPrometheusService')
