@@ -1,12 +1,15 @@
 import {
   ServerDatastampBody,
 } from '@bato-urbanflow/urbanflow-models';
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { ServerDatastampService } from '../Services/serverDatastamp.service';
+import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
+import * as IServerDatastampService from '../Objects/Interfaces/IServerDatastampService';
 
-@Controller('dataLogs')
-export class ServerDatastampController {
-  constructor(private readonly serverDatastampService: ServerDatastampService) {
+@Controller('serverDatastamp')
+class ServerDatastampController {
+  constructor(
+    @Inject('IServerDatastampService')
+    private readonly serverDatastampService: IServerDatastampService.IServerDatastampService,
+  ) {
     this.serverDatastampService = serverDatastampService;
   }
 
@@ -34,3 +37,5 @@ export class ServerDatastampController {
     return await this.serverDatastampService.addDatastamp(data);
   }
 }
+
+export default ServerDatastampController;

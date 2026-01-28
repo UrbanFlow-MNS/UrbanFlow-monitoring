@@ -3,20 +3,20 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Post,
   Put,
   Query,
 } from '@nestjs/common';
-import {
-  ExternalApiBody,
-} from '@bato-urbanflow/urbanflow-models';
+import { ExternalApiBody } from '@bato-urbanflow/urbanflow-models';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import * as IExternalApiService from '../Objects/Interfaces/IExternalApiService';
 
 @Controller('externalApi')
 export class ExternalApiController {
   constructor(
+    @Inject('IExternalApiService')
     private readonly externalApiService: IExternalApiService.IExternalApiService,
   ) {
     this.externalApiService = externalApiService;
