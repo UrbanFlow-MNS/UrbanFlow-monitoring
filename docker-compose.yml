@@ -1,3 +1,4 @@
+
 services:
   rabbitmq:
     image: rabbitmq:3-management
@@ -44,6 +45,18 @@ services:
         condition: service_healthy
     networks:
       - urban-flow-network
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - urban-flow-network
+    restart: unless-stopped
+
 
 volumes:
   monitoring-db:
