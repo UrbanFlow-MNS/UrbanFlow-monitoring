@@ -1,4 +1,5 @@
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Controller, Get, Inject, Res } from '@nestjs/common';
+import express from 'express';
 import * as IPrometheusService from '../Objects/Interfaces/IPrometheusService';
 
 @Controller('metrics')
@@ -9,7 +10,9 @@ export class PrometheusController {
   ) {}
 
   @Get()
-  async getMetrics(): Promise<string> {
-    return await this.prometheusService.getMetrics();
+  async getMetrics(@Res() res: express.Response) {
+    const metrics = await this.prometheusService.getMetrics();
+    res.header('Content-Type', 'text/plain; version=0.0.4; charset=utf-8');
+    return res.send(metrics);
   }
 }
