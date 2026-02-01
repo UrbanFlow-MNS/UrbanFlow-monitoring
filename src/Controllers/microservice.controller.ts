@@ -2,23 +2,22 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
+  Get, Inject,
   Param,
   Post,
   Put,
   Query,
 } from '@nestjs/common';
 import {
-  ExternalApiBody,
   MicroserviceBody,
 } from '@bato-urbanflow/urbanflow-models';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import * as IExternalApiService from '../Objects/Interfaces/IExternalApiService';
 import * as IMicroserviceService from '../Objects/Interfaces/IMicroserviceService';
 
-@Controller('externalApi')
+@Controller('microservice')
 export class MicroserviceController {
   constructor(
+    @Inject('IMicroserviceService')
     private readonly microserviceService: IMicroserviceService.IMicroserviceService,
   ) {
     this.microserviceService = microserviceService;

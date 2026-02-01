@@ -1,0 +1,21 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'RabbitMQ'
+    static_configs:
+      - targets: [ 'rabbitmq:15692' ]
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: [ 'localhost:9090' ]
+
+  - job_name: 'urbanflow-monitoring'
+    static_configs:
+      - targets: ['monitoring-service:4005']
+      - metrics_path: '/metrics'
+
+  - job_name: node
+    static_configs:
+      - targets: [ 'localhost:9100' ]

@@ -6,7 +6,7 @@ export class ServerDatastampEntity {
     id: number;
     @Column()
     serverName: string;
-    @Column()
+    @Column({ type: 'timestamp' })
     timestamp: Timestamp;
     @Column()
     cpuPercent: number;

@@ -1,3 +1,4 @@
+
 services:
   rabbitmq:
     image: rabbitmq:3-management
@@ -44,6 +45,29 @@ services:
         condition: service_healthy
     networks:
       - urban-flow-network
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - urban-flow-network
+    restart: unless-stopped
+
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node_exporter
+    command:
+      - '--path.rootfs=/host'
+    network_mode: host
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro'
+
 
 volumes:
   monitoring-db:
