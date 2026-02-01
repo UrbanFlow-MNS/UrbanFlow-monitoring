@@ -12,9 +12,9 @@ scrape_configs:
       - targets: [ 'localhost:9090' ]
 
   - job_name: 'urbanflow-monitoring'
+    metrics_path: '/metrics'
     static_configs:
       - targets: ['monitoring-service:4005']
-      - metrics_path: '/metrics'
 
   - job_name: node
     static_configs:
