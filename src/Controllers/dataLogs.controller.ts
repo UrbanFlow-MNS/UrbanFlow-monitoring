@@ -1,36 +1,37 @@
 import { DataLogsBody } from '@bato-urbanflow/urbanflow-models';
-import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
+import { Controller, Inject } from '@nestjs/common';
 import * as IDataLogsService from '../Objects/Interfaces/IDataLogsService';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
-@Controller('dataLogs')
+@Controller()
 export class DataLogsController {
   constructor(
     @Inject('IDataLogsService')
     private readonly dataLogsService: IDataLogsService.IDataLogsService,
-  ) {
-    this.dataLogsService = dataLogsService;
-  }
+  ) {}
 
-  @Get()
+  @MessagePattern({ cmd: 'datalogs.find' })
   async findWithFilters(
-    @Query('numberOfElement') numberOfElement?: number,
-    @Query('startingElement') startingElement?: number,
-    @Query('isApi') isApi?: boolean,
-    @Query('startDate') startDate?: string,
-    @Query('endDate') endDate?: string,
+    @Payload()
+    data: {
+      numberOfElement?: number;
+      startingElement?: number;
+      isApi?: boolean;
+      startDate?: string;
+      endDate?: string;
+    },
   ): Promise<DataLogsBody[]> {
     return await this.dataLogsService.findWithFilters(
-      numberOfElement,
-      startingElement,
-      isApi,
-      startDate,
-      endDate,
+      data.numberOfElement,
+      data.startingElement,
+      data.isApi,
+      data.startDate,
+      data.endDate,
     );
   }
 
-  @Post()
-  async addLog(@Body() data: DataLogsBody): Promise<DataLogsBody> {
+  @MessagePattern({ cmd: 'datalogs.add' })
+  async addLog(@Payload() data: DataLogsBody): Promise<DataLogsBody> {
     return await this.dataLogsService.addLog(data);
   }
 }
-
