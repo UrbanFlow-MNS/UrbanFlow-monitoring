@@ -1,38 +1,38 @@
-import {
-  ServerDatastampBody,
-} from '@bato-urbanflow/urbanflow-models';
-import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
+import { ServerDatastampBody } from '@bato-urbanflow/urbanflow-models';
+import { Controller, Inject } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import * as IServerDatastampService from '../Objects/Interfaces/IServerDatastampService';
 
-@Controller('serverDatastamp')
-class ServerDatastampController {
+@Controller()
+export class ServerDatastampController {
   constructor(
     @Inject('IServerDatastampService')
     private readonly serverDatastampService: IServerDatastampService.IServerDatastampService,
-  ) {
-    this.serverDatastampService = serverDatastampService;
-  }
+  ) {}
 
-  @Get()
+  @MessagePattern({ cmd: 'server_datastamp.find' })
   async findWithFilters(
-    @Query('numberOfElement') numberOfElement?: number,
-    @Query('startingElement') startingElement?: number,
-    @Query('serverName') serverName?: string,
-    @Query('startDate') startDate?: string,
-    @Query('endDate') endDate?: string,
+    @Payload()
+    data: {
+      numberOfElement?: number;
+      startingElement?: number;
+      serverName?: string;
+      startDate?: string;
+      endDate?: string;
+    },
   ): Promise<ServerDatastampBody[]> {
     return await this.serverDatastampService.findWithFilters(
-      numberOfElement,
-      startingElement,
-      serverName,
-      startDate,
-      endDate,
+      data.numberOfElement,
+      data.startingElement,
+      data.serverName,
+      data.startDate,
+      data.endDate,
     );
   }
 
-  @Post()
+  @MessagePattern({ cmd: 'server_datastamp.add' })
   async addLog(
-    @Body() data: ServerDatastampBody,
+    @Payload() data: ServerDatastampBody,
   ): Promise<ServerDatastampBody> {
     return await this.serverDatastampService.addDatastamp(data);
   }

@@ -1,58 +1,48 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get, Inject,
-  Param,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common';
-import {
-  MicroserviceBody,
-} from '@bato-urbanflow/urbanflow-models';
+import { Controller, Inject } from '@nestjs/common';
+import { MicroserviceBody } from '@bato-urbanflow/urbanflow-models';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import * as IMicroserviceService from '../Objects/Interfaces/IMicroserviceService';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
-@Controller('microservice')
+@Controller()
 export class MicroserviceController {
   constructor(
     @Inject('IMicroserviceService')
     private readonly microserviceService: IMicroserviceService.IMicroserviceService,
-  ) {
-    this.microserviceService = microserviceService;
-  }
+  ) {}
 
-  @Get()
+  @MessagePattern({ cmd: 'microservice.find' })
   async findWithFilters(
-    @Query('numberOfElement') numberOfElement?: number,
-    @Query('startingElement') startingElement?: number,
-    @Query('name') name?: string,
-    @Query('isActive') isActive?: boolean,
+    @Payload()
+    data: {
+      numberOfElement?: number;
+      startingElement?: number;
+      name?: string;
+      isActive?: boolean;
+    },
   ): Promise<MicroserviceBody[]> {
     return await this.microserviceService.findWithFilters(
-      numberOfElement,
-      startingElement,
-      name,
-      isActive,
+      data.numberOfElement,
+      data.startingElement,
+      data.name,
+      data.isActive,
     );
   }
 
-  @Post()
-  async addApi(@Body() data: MicroserviceBody): Promise<MicroserviceBody> {
+  @MessagePattern({ cmd: 'microservice.add' })
+  async addApi(@Payload() data: MicroserviceBody): Promise<MicroserviceBody> {
     return await this.microserviceService.addMs(data);
   }
 
-  @Put('/:id')
+  @MessagePattern({ cmd: 'microservice.edit' })
   async editApi(
-    @Param('id') id: string,
-    @Body() data: MicroserviceBody,
+    @Payload() data: { id: string; body: MicroserviceBody },
   ): Promise<UpdateResult> {
-    return await this.microserviceService.editMs(id, data);
+    return await this.microserviceService.editMs(data.id, data.body);
   }
 
-  @Delete('/:id')
-  async deleteApi(@Param('id') id: string): Promise<DeleteResult> {
+  @MessagePattern({ cmd: 'microservice.delete' })
+  async deleteApi(@Payload() id: string): Promise<DeleteResult> {
     return await this.microserviceService.deleteMs(id);
   }
 }

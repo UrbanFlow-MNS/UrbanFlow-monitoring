@@ -1,57 +1,48 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Inject,
-  Param,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common';
+import { Controller, Inject } from '@nestjs/common';
 import { ExternalApiBody } from '@bato-urbanflow/urbanflow-models';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import * as IExternalApiService from '../Objects/Interfaces/IExternalApiService';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
-@Controller('externalApi')
+@Controller()
 export class ExternalApiController {
   constructor(
     @Inject('IExternalApiService')
     private readonly externalApiService: IExternalApiService.IExternalApiService,
-  ) {
-    this.externalApiService = externalApiService;
-  }
+  ) {}
 
-  @Get()
+  @MessagePattern({ cmd: 'external_api.find' })
   async findWithFilters(
-    @Query('numberOfElement') numberOfElement?: number,
-    @Query('startingElement') startingElement?: number,
-    @Query('name') name?: string,
-    @Query('isActive') isActive?: boolean,
+    @Payload()
+    data: {
+      numberOfElement?: number;
+      startingElement?: number;
+      name?: string;
+      isActive?: boolean;
+    },
   ): Promise<ExternalApiBody[]> {
     return await this.externalApiService.findWithFilters(
-      numberOfElement,
-      startingElement,
-      name,
-      isActive,
+      data.numberOfElement,
+      data.startingElement,
+      data.name,
+      data.isActive,
     );
   }
 
-  @Post()
-  async addApi(@Body() data: ExternalApiBody): Promise<ExternalApiBody> {
+  @MessagePattern({ cmd: 'external_api.add' })
+  async addApi(@Payload() data: ExternalApiBody): Promise<ExternalApiBody> {
     return await this.externalApiService.addApi(data);
   }
 
-  @Put('/:id')
+  @MessagePattern({ cmd: 'external_api.edit' })
   async editApi(
-    @Param('id') id: string,
-    @Body() data: ExternalApiBody,
+    @Payload() data: { id: string; body: ExternalApiBody },
   ): Promise<UpdateResult> {
-    return await this.externalApiService.editApi(id, data);
+    return await this.externalApiService.editApi(data.id, data.body);
   }
 
-  @Delete('/:id')
-  async deleteApi(@Param('id') id: string): Promise<DeleteResult> {
+  @MessagePattern({ cmd: 'external_api.delete' })
+  async deleteApi(@Payload() id: string): Promise<DeleteResult> {
     return await this.externalApiService.deleteApi(id);
   }
 }
