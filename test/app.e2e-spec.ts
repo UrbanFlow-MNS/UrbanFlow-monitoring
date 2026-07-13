@@ -20,12 +20,12 @@ import { ExternalApiEntity } from './../src/Objects/Entities/externalApi.entity'
 import { ServerDatastampEntity } from './../src/Objects/Entities/serverDatastamp.entity';
 
 const createRepo = () => ({
-  find: jest.fn(),
-  findOne: jest.fn(),
-  create: jest.fn(),
-  save: jest.fn(),
-  update: jest.fn(),
-  delete: jest.fn(),
+  find: vi.fn(),
+  findOne: vi.fn(),
+  create: vi.fn(),
+  save: vi.fn(),
+  update: vi.fn(),
+  delete: vi.fn(),
 });
 
 describe('Monitoring API (e2e)', () => {
@@ -81,7 +81,7 @@ describe('Monitoring API (e2e)', () => {
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('GET / returns the health message', async () => {

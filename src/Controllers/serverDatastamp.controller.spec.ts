@@ -1,13 +1,14 @@
+import type { Mock } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ServerDatastampBody } from '@bato-urbanflow/urbanflow-models';
 import ServerDatastampController from './serverDatastamp.controller';
 
 describe('ServerDatastampController', () => {
   let controller: ServerDatastampController;
-  let service: { findWithFilters: jest.Mock; addDatastamp: jest.Mock };
+  let service: { findWithFilters: Mock; addDatastamp: Mock };
 
   beforeEach(async () => {
-    service = { findWithFilters: jest.fn(), addDatastamp: jest.fn() };
+    service = { findWithFilters: vi.fn(), addDatastamp: vi.fn() };
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ServerDatastampController],

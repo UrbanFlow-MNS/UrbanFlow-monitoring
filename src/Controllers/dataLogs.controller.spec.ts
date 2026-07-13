@@ -1,13 +1,14 @@
+import type { Mock } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DataLogsBody } from '@bato-urbanflow/urbanflow-models';
 import { DataLogsController } from './dataLogs.controller';
 
 describe('DataLogsController', () => {
   let controller: DataLogsController;
-  let service: { findWithFilters: jest.Mock; addLog: jest.Mock };
+  let service: { findWithFilters: Mock; addLog: Mock };
 
   beforeEach(async () => {
-    service = { findWithFilters: jest.fn(), addLog: jest.fn() };
+    service = { findWithFilters: vi.fn(), addLog: vi.fn() };
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [DataLogsController],

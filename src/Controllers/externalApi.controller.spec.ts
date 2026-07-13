@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ExternalApiBody } from '@bato-urbanflow/urbanflow-models';
 import { ExternalApiController } from './externalApi.controller';
@@ -5,18 +6,18 @@ import { ExternalApiController } from './externalApi.controller';
 describe('ExternalApiController', () => {
   let controller: ExternalApiController;
   let service: {
-    findWithFilters: jest.Mock;
-    addApi: jest.Mock;
-    editApi: jest.Mock;
-    deleteApi: jest.Mock;
+    findWithFilters: Mock;
+    addApi: Mock;
+    editApi: Mock;
+    deleteApi: Mock;
   };
 
   beforeEach(async () => {
     service = {
-      findWithFilters: jest.fn(),
-      addApi: jest.fn(),
-      editApi: jest.fn(),
-      deleteApi: jest.fn(),
+      findWithFilters: vi.fn(),
+      addApi: vi.fn(),
+      editApi: vi.fn(),
+      deleteApi: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
