@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MicroserviceBody } from '@bato-urbanflow/urbanflow-models';
 import { MicroserviceController } from './microservice.controller';
@@ -5,18 +6,18 @@ import { MicroserviceController } from './microservice.controller';
 describe('MicroserviceController', () => {
   let controller: MicroserviceController;
   let service: {
-    findWithFilters: jest.Mock;
-    addMs: jest.Mock;
-    editMs: jest.Mock;
-    deleteMs: jest.Mock;
+    findWithFilters: Mock;
+    addMs: Mock;
+    editMs: Mock;
+    deleteMs: Mock;
   };
 
   beforeEach(async () => {
     service = {
-      findWithFilters: jest.fn(),
-      addMs: jest.fn(),
-      editMs: jest.fn(),
-      deleteMs: jest.fn(),
+      findWithFilters: vi.fn(),
+      addMs: vi.fn(),
+      editMs: vi.fn(),
+      deleteMs: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({

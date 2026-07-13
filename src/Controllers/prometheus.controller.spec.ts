@@ -1,13 +1,14 @@
+import type { Mock } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import express from 'express';
 import { PrometheusController } from './prometheus.controller';
 
 describe('PrometheusController', () => {
   let controller: PrometheusController;
-  let service: { getMetrics: jest.Mock };
+  let service: { getMetrics: Mock };
 
   beforeEach(async () => {
-    service = { getMetrics: jest.fn() };
+    service = { getMetrics: vi.fn() };
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PrometheusController],
@@ -23,8 +24,8 @@ describe('PrometheusController', () => {
 
   it('sends the metrics payload with the prometheus content type', async () => {
     service.getMetrics.mockResolvedValue('metric 1');
-    const send = jest.fn().mockReturnValue('sent');
-    const res = { header: jest.fn(), send } as unknown as express.Response;
+    const send = vi.fn().mockReturnValue('sent');
+    const res = { header: vi.fn(), send } as unknown as express.Response;
 
     const result = await controller.getMetrics(res);
 
