@@ -27,27 +27,14 @@ export class MicroserviceService implements IMicroserviceService {
     name?: string,
     isActive?: boolean,
   ): Promise<MicroserviceBody[]> {
-    const fetchedMicroservices: MicroserviceBody[] =
-      await this.microserviceRepository.find({
-        where: {
-          name: Like(`%${name}%`),
-          isActive: isActive,
-        },
-      });
-
-    if (startingElement === undefined) {
-      startingElement = 0;
-    } else if (startingElement >= fetchedMicroservices.length) {
-      throw new Error(
-        'The starting element is greater than the number of element',
-      );
-    }
-
-    if (numberOfElement === undefined) {
-      numberOfElement = 50;
-    }
-
-    return fetchedMicroservices.slice(startingElement, numberOfElement);
+    return await this.microserviceRepository.find({
+      where: {
+        name: Like(`%${name}%`),
+        isActive: isActive,
+      },
+      skip: startingElement ?? 0,
+      take: Math.min(numberOfElement ?? 50, 100),
+    });
   }
 
   addMs(data: MicroserviceBody): Promise<MicroserviceBody> {

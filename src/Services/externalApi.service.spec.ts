@@ -53,23 +53,28 @@ describe('ExternalApiService', () => {
       expect(call.where.name).toBeDefined();
     });
 
-    it('slices the result set', async () => {
-      const apis = Array.from({ length: 4 }, (_, index) =>
-        buildApi({ id: index + 1 }),
-      );
+    it('paginates via skip and take at the database level', async () => {
+      const apis = [buildApi(), buildApi({ id: 2 })];
       repository.find!.mockResolvedValue(apis);
 
       const result = await service.findWithFilters(3, 1);
 
-      expect(result).toEqual(apis.slice(1, 3));
+      expect(result).toBe(apis);
+      expect(repository.find!.mock.calls[0][0]).toMatchObject({
+        skip: 1,
+        take: 3,
+      });
     });
 
-    it('throws when startingElement is out of range', async () => {
-      repository.find!.mockResolvedValue([buildApi()]);
+    it('caps take at 100 to prevent unbounded queries', async () => {
+      repository.find!.mockResolvedValue([]);
 
-      await expect(service.findWithFilters(undefined, 5)).rejects.toThrow(
-        'The starting element is greater than the number of element',
-      );
+      await service.findWithFilters(500, 0);
+
+      expect(repository.find!.mock.calls[0][0]).toMatchObject({
+        skip: 0,
+        take: 100,
+      });
     });
   });
 

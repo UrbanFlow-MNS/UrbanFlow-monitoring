@@ -38,30 +38,17 @@ export class ServerDatastampService implements IServerDatastampService {
       parsedEndDate = new Date(Date.parse(endDate));
     }
 
-    const fetchedDatastamp: ServerDatastampBody[] =
-      await this.serverDatastampRepository.find({
-        where: {
-          serverName: Like(`%${serverName}%`),
-          timestamp: dateUtils.getDateFindOperator(
-            parsedStartDate,
-            parsedEndDate,
-          ),
-        },
-      });
-
-    if (startingElement === undefined) {
-      startingElement = 0;
-    } else if (startingElement >= fetchedDatastamp.length) {
-      throw new Error(
-        'The starting element is greater than the number of element',
-      );
-    }
-
-    if (numberOfElement === undefined) {
-      numberOfElement = 50;
-    }
-
-    return fetchedDatastamp.slice(startingElement, numberOfElement);
+    return await this.serverDatastampRepository.find({
+      where: {
+        serverName: Like(`%${serverName}%`),
+        timestamp: dateUtils.getDateFindOperator(
+          parsedStartDate,
+          parsedEndDate,
+        ),
+      },
+      skip: startingElement ?? 0,
+      take: Math.min(numberOfElement ?? 50, 100),
+    });
   }
 
   async addDatastamp(data: ServerDatastampBody): Promise<ServerDatastampBody> {

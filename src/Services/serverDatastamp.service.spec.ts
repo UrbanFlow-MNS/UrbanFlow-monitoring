@@ -66,23 +66,28 @@ describe('ServerDatastampService', () => {
       expect(repository.find!.mock.calls[0][0].where.timestamp).toBeDefined();
     });
 
-    it('slices the result set', async () => {
-      const stamps = Array.from({ length: 4 }, (_, index) =>
-        buildDatastamp({ id: index + 1 }),
-      );
+    it('paginates via skip and take at the database level', async () => {
+      const stamps = [buildDatastamp(), buildDatastamp({ id: 2 })];
       repository.find!.mockResolvedValue(stamps);
 
       const result = await service.findWithFilters(3, 1);
 
-      expect(result).toEqual(stamps.slice(1, 3));
+      expect(result).toBe(stamps);
+      expect(repository.find!.mock.calls[0][0]).toMatchObject({
+        skip: 1,
+        take: 3,
+      });
     });
 
-    it('throws when startingElement is out of range', async () => {
-      repository.find!.mockResolvedValue([buildDatastamp()]);
+    it('caps take at 100 to prevent unbounded queries', async () => {
+      repository.find!.mockResolvedValue([]);
 
-      await expect(service.findWithFilters(undefined, 5)).rejects.toThrow(
-        'The starting element is greater than the number of element',
-      );
+      await service.findWithFilters(500, 0);
+
+      expect(repository.find!.mock.calls[0][0]).toMatchObject({
+        skip: 0,
+        take: 100,
+      });
     });
   });
 
