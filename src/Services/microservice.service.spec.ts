@@ -53,23 +53,28 @@ describe('MicroserviceService', () => {
       expect(call.where.name).toBeDefined();
     });
 
-    it('slices the result set', async () => {
-      const services = Array.from({ length: 4 }, (_, index) =>
-        buildMs({ id: index + 1 }),
-      );
+    it('paginates via skip and take at the database level', async () => {
+      const services = [buildMs(), buildMs({ id: 2 })];
       repository.find!.mockResolvedValue(services);
 
       const result = await service.findWithFilters(3, 1);
 
-      expect(result).toEqual(services.slice(1, 3));
+      expect(result).toBe(services);
+      expect(repository.find!.mock.calls[0][0]).toMatchObject({
+        skip: 1,
+        take: 3,
+      });
     });
 
-    it('throws when startingElement is out of range', async () => {
-      repository.find!.mockResolvedValue([buildMs()]);
+    it('caps take at 100 to prevent unbounded queries', async () => {
+      repository.find!.mockResolvedValue([]);
 
-      await expect(service.findWithFilters(undefined, 5)).rejects.toThrow(
-        'The starting element is greater than the number of element',
-      );
+      await service.findWithFilters(500, 0);
+
+      expect(repository.find!.mock.calls[0][0]).toMatchObject({
+        skip: 0,
+        take: 100,
+      });
     });
   });
 

@@ -36,24 +36,14 @@ export class DataLogsService implements IDataLogsService {
       parsedEndDate = new Date(Date.parse(endDate))
     }
 
-    const fetchedLogs : DataLogsBody[] = await this.dataLogsRepository.find({
+    return await this.dataLogsRepository.find({
       where : {
         isApi: isApi,
         dateOfData: dateUtils.getDateFindOperator(parsedStartDate,parsedEndDate)
-      }
+      },
+      skip: startingElement ?? 0,
+      take: Math.min(numberOfElement ?? 50, 100),
     })
-
-    if(startingElement === undefined) {
-      startingElement = 0
-    } else if (startingElement >= fetchedLogs.length) {
-      throw new Error("The starting element is greater than the number of element")
-    }
-
-    if(numberOfElement === undefined){
-      numberOfElement = 50
-    }
-
-    return fetchedLogs.slice(startingElement, numberOfElement)
   }
 
   async addLog(data: DataLogsBody): Promise<DataLogsBody> {

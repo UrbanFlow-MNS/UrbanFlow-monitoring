@@ -25,27 +25,14 @@ export class ExternalApiService implements IExternalApiService {
     name?: string,
     isActive?: boolean,
   ): Promise<ExternalApiBody[]> {
-    const fetchedApi: ExternalApiBody[] =
-      await this.externalApiRepository.find({
-        where: {
-          name: Like(`%${name}%`),
-          isActive: isActive,
-        },
-      });
-
-    if (startingElement === undefined) {
-      startingElement = 0;
-    } else if (startingElement >= fetchedApi.length) {
-      throw new Error(
-        'The starting element is greater than the number of element',
-      );
-    }
-
-    if (numberOfElement === undefined) {
-      numberOfElement = 50;
-    }
-
-    return fetchedApi.slice(startingElement, numberOfElement);
+    return await this.externalApiRepository.find({
+      where: {
+        name: Like(`%${name}%`),
+        isActive: isActive,
+      },
+      skip: startingElement ?? 0,
+      take: Math.min(numberOfElement ?? 50, 100),
+    });
   }
 
   addApi(data: ExternalApiBody): Promise<ExternalApiBody> {

@@ -51,6 +51,8 @@ describe('DataLogsService', () => {
       expect(result).toEqual(logs);
       expect(repository.find).toHaveBeenCalledWith({
         where: { isApi: undefined, dateOfData: undefined },
+        skip: 0,
+        take: 50,
       });
     });
 
@@ -64,23 +66,28 @@ describe('DataLogsService', () => {
       expect(call.where.dateOfData).toBeDefined();
     });
 
-    it('slices with startingElement and numberOfElement', async () => {
-      const logs = Array.from({ length: 5 }, (_, index) =>
-        buildDataLog({ id: index + 1 }),
-      );
+    it('paginates via skip and take at the database level', async () => {
+      const logs = [buildDataLog(), buildDataLog({ id: 2 })];
       repository.find!.mockResolvedValue(logs);
 
       const result = await service.findWithFilters(3, 1);
 
-      expect(result).toEqual(logs.slice(1, 3));
+      expect(result).toBe(logs);
+      expect(repository.find!.mock.calls[0][0]).toMatchObject({
+        skip: 1,
+        take: 3,
+      });
     });
 
-    it('throws when startingElement is out of range', async () => {
-      repository.find!.mockResolvedValue([buildDataLog()]);
+    it('caps take at 100 to prevent unbounded queries', async () => {
+      repository.find!.mockResolvedValue([]);
 
-      await expect(service.findWithFilters(undefined, 5)).rejects.toThrow(
-        'The starting element is greater than the number of element',
-      );
+      await service.findWithFilters(500, 0);
+
+      expect(repository.find!.mock.calls[0][0]).toMatchObject({
+        skip: 0,
+        take: 100,
+      });
     });
   });
 
