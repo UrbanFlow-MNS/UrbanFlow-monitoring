@@ -34,7 +34,7 @@ import { PrometheusController } from './Controllers/prometheus.controller';
         MicroserviceEntity,
         ServerDatastampEntity,
       ],
-      synchronize: Boolean(process.env.POSTGRES_SYNCHRONISE),
+      synchronize: process.env.POSTGRES_SYNCHRONISE === 'true',
     }),
     TypeOrmModule.forFeature([
       DataLogsEntity,
