@@ -47,7 +47,7 @@ scrape_configs:
     static_configs:
       - targets: [ 'trips-planner-service:4008' ]
 
-  - job_name: 'bato-incident'
+  - job_name: 'bato-incidents'
     metrics_path: '/metrics'
     static_configs:
       - targets: [ 'incident-service:4004' ]

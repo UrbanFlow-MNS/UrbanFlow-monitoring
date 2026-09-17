@@ -16,7 +16,10 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "baseUrl": ".",
-    "paths": { "*": ["node_modules/*"] }
+    "paths": {
+      "src/*": ["src/*"],
+      "*": ["node_modules/*"]
+    }
   },
   "include": [
     "src/**/*",
