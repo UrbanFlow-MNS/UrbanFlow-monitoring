@@ -50,4 +50,4 @@ scrape_configs:
   - job_name: 'bato-incidents'
     metrics_path: '/metrics'
     static_configs:
-      - targets: [ 'incidents-service:4004' ]
+      - targets: [ 'incident-service:4004' ]
